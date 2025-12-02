@@ -86,7 +86,7 @@ function solve2(data)
 
 export default async function day02(target)
 {
-  const start = Date.now();
+  const start = performance.now();
   debug('starting');
 
   const buffer = await fs.readFile(target);
@@ -121,5 +121,5 @@ export default async function day02(target)
     throw new Error(`Invalid part 2 solution: ${part2}. Expecting; ${expect2b}`);
   }
 
-  return { day: 'day02', part1, part2, duration: Date.now() - start };
+  return { day: 'day02', part1, part2, duration: performance.now() - start };
 }
