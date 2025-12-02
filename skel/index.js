@@ -13,13 +13,13 @@ if (process.argv[2])
 
 function solve1(data)
 {
-  debug('data:', data);
+  debug({ data });
   return 0;
 }
 
 function solve2(data)
 {
-  debug('data:', data);
+  debug({ data });
   return 0;
 }
 
