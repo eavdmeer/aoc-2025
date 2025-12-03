@@ -43,19 +43,17 @@ function solve2(data)
 
       while (digits.length < 12)
       {
-        const range = jolts.slice(curr, jlen - 11 + digits.length);
-        let max = range[0];
-        let idx = 0;
-        for (let i = 0; i < range.length; i++)
+        let max = jolts[curr];
+        for (let i = curr; i < jlen - 11 + digits.length; i++)
         {
-          if (range[i] > max)
+          if (jolts[i] > max)
           {
-            idx = i;
-            max = range[i];
+            curr = i;
+            max = jolts[i];
           }
         }
         digits.push(max);
-        curr += idx + 1;
+        curr++;
       }
 
       return a + Number(digits.join(''));
