@@ -60,6 +60,7 @@ function solve2(data)
       const str = String(i);
       for (let l = 1; l <= str.length / 2; l++)
       {
+        if (str.length % l) { continue; }
         const parts = Math.ceil(str.length / l);
         let allEqual = true;
         const cmp = str.substr(0, l);
