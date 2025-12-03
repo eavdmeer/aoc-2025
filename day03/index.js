@@ -11,53 +11,39 @@ if (process.argv[2])
     .then(console.log);
 }
 
+const reducer = (jolts, bank, blen, count) =>
+{
+  const digits = [];
+  let curr = 0;
+
+  while (digits.length < count)
+  {
+    let max = bank[curr];
+    for (let i = curr; i < blen - count + 1 + digits.length; i++)
+    {
+      if (bank[i] > max)
+      {
+        curr = i;
+        max = bank[i];
+      }
+    }
+    digits.push(max);
+    curr++;
+  }
+
+  return jolts + Number(digits.join(''));
+};
+
 function solve1(data)
 {
   return data
-    .reduce((a, jolts) =>
-    {
-      const digits = [ 0, 0 ];
-      for (let i = 0; i < jolts.length; i++)
-      {
-        if (i + 1 < jolts.length && jolts[i] > digits[0])
-        {
-          digits[0] = jolts[i];
-          digits[1] = Math.max(...jolts.slice(i + 1));
-        }
-      }
-      return a + 10 * digits[0] + digits[1];
-    }, 0);
+    .reduce((jolts, bank) => reducer(jolts, bank, data[0].length, 2), 0);
 }
 
 function solve2(data)
 {
-  debug({ data });
-
-  const jlen = data[0].length;
-
   return data
-    .reduce((a, jolts) =>
-    {
-      const digits = [];
-      let curr = 0;
-
-      while (digits.length < 12)
-      {
-        let max = jolts[curr];
-        for (let i = curr; i < jlen - 11 + digits.length; i++)
-        {
-          if (jolts[i] > max)
-          {
-            curr = i;
-            max = jolts[i];
-          }
-        }
-        digits.push(max);
-        curr++;
-      }
-
-      return a + Number(digits.join(''));
-    }, 0);
+    .reduce((jolts, bank) => reducer(jolts, bank, data[0].length, 12), 0);
 }
 
 export default async function day03(target)
