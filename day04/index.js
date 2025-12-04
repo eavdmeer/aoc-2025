@@ -33,9 +33,9 @@ function removable(data)
   {
     for (let c = 0; c < w; c++)
     {
-      if (data[r]?.charAt(c) === '.') { continue; }
+      if (data[r]?.[c] === '.') { continue; }
       const rolls = dirs.reduce((a, [ dr, dc ]) =>
-        a + (data[r + dr]?.charAt(c + dc) === '@' ? 1 : 0), 0);
+        a + (data[r + dr]?.[c + dc] === '@' ? 1 : 0), 0);
       if (rolls < 4)
       {
         good.add([ r, c ]);
@@ -44,13 +44,6 @@ function removable(data)
   }
 
   return good;
-}
-
-function setCharAt(str, index, chr)
-{
-  return index > str.length - 1 ?
-    str :
-    `${str.substring(0, index)}${chr}${str.substring(index + 1)}`;
 }
 
 function solve1(data)
@@ -69,7 +62,7 @@ function solve2(data)
   {
     cleanup = removable(data);
     total += cleanup.size;
-    cleanup.forEach(([ r, c ]) => data[r] = setCharAt(data[r], c, '.'));
+    cleanup.forEach(([ r, c ]) => data[r][c] = '.');
   } while (cleanup.size > 0);
 
   return total;
@@ -86,7 +79,8 @@ export default async function day04(target)
     .toString()
     .trim()
     .split(/\s*\n\s*/)
-    .filter(v => v);
+    .filter(v => v)
+    .map(v => v.split(''));
 
   const part1 = solve1(data);
   const expect1a = 13;
