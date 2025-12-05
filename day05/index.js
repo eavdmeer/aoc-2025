@@ -26,38 +26,28 @@ function solve2(data)
 
   const sorted = ranges.toSorted((a, b) => a[0] - b[0]);
 
-  let cl;
-  let cr;
-  const reduced = [];
+  let [ cl, cr ] = sorted.shift();
+  const joined = [];
   while (sorted.length)
   {
     const [ l, r ] = sorted.shift();
-    if (cl === undefined)
+    if (r < cl || l > cr)
     {
+      // debug('Entirely to the left or right.');
+      joined.push([ cl, cr ]);
       cl = l; cr = r;
     }
     else
     {
-      if (r < cl || l > cr)
-      {
-        // debug('Entirely to the left or right.');
-        reduced.push([ cl, cr ]);
-        cl = l; cr = r;
-      }
-      else
-      {
-        cl = l < cl && (l < cl || r > cr) ? l : cl;
-        cr = r > cr && (l < cl || r > cr) ? r : cr;
-      }
+      cl = l < cl && (l < cl || r > cr) ? l : cl;
+      cr = r > cr && (l < cl || r > cr) ? r : cr;
     }
   }
-  if (cl !== undefined)
-  {
-    // Push the block we were working on
-    reduced.push([ cl, cr ]);
-  }
 
-  return reduced.reduce((a, [ l, r ]) => a + 1 + r - l, 0);
+  // Push the block we were working on
+  joined.push([ cl, cr ]);
+
+  return joined.reduce((a, [ l, r ]) => a + 1 + r - l, 0);
 }
 
 export default async function day05(target)
