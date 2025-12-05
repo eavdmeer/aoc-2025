@@ -38,28 +38,16 @@ function solve2(data)
     }
     else
     {
-      debug({ cl, cr }, { l, r });
       if (r < cl || l > cr)
       {
         // debug('Entirely to the left or right.');
         reduced.push([ cl, cr ]);
         cl = l; cr = r;
-        continue;
       }
-      if (l >= cl && r <= cr)
+      else
       {
-        // debug('Entirely within. Ignore');
-        continue;
-      }
-      if (l < cl)
-      {
-        // debug('Left is more to the left');
-        cl = l;
-      }
-      if (r > cr)
-      {
-        // debug('Right is more to the right');
-        cr = r;
+        cl = l < cl && (l < cl || r > cr) ? l : cl;
+        cr = r > cr && (l < cl || r > cr) ? r : cr;
       }
     }
   }
