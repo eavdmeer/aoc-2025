@@ -18,11 +18,11 @@ function solve1(data)
   const ldata = data.map(v => v.trim()
     .split(/\s+/).map(n => /^\d+$/.test(n) ? Number(n) : n));
 
-  const [ operands, numbers ] = [ ldata.pop(), ldata ];
+  const [ ops, numbers ] = [ ldata.pop(), ldata ];
 
   return numbers
     .reduce((a, row) => a.map((v, i) =>
-      runop(v, operands[i], row[i])), numbers.shift())
+      runop(v, ops[i], row[i])), numbers.shift())
     .reduce((a, v) => a + v, 0);
 }
 
@@ -52,9 +52,20 @@ const allIndexesOf = (ch, str) =>
   return result;
 };
 
-function solve2(data)
+function solve2(data, method = 1)
 {
-  const operands = data.pop().split(/\s+/);
+  const ops = data.pop().split(/\s+/);
+
+  if (method === 2)
+  {
+    // eslint-disable-next-line no-eval
+    return eval(transpose(data.map(v => v.split('')))
+      .map(v => v.join(''))
+      .join('\n')
+      .split(/\n\s+\n/)
+      .map((v, i) => v.replace(/\s*\n\s*/g, ops[i]))
+      .join('+'));
+  }
 
   // Find indices of empty columns
   const empty = data
@@ -75,7 +86,7 @@ function solve2(data)
 
   return transpose(numbers).reduce((a, col, i) =>
   {
-    const op = operands[i];
+    const op = ops[i];
     let result = op === '*' ? 1 : 0;
     for (let i = 0; i < col[0].length; i++)
     {
