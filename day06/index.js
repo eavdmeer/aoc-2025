@@ -13,11 +13,16 @@ if (process.argv[2])
 
 const runop = (a, op, b) => op === '*' ? a * b : a + b;
 
-function solve1(operands, data)
+function solve1(data)
 {
-  return data
+  const ldata = data.map(v => v.trim()
+    .split(/\s+/).map(n => /^\d+$/.test(n) ? Number(n) : n));
+
+  const [ operands, numbers ] = [ ldata.pop(), ldata ];
+
+  return numbers
     .reduce((a, row) => a.map((v, i) =>
-      runop(v, operands[i], row[i])), data.shift())
+      runop(v, operands[i], row[i])), numbers.shift())
     .reduce((a, v) => a + v, 0);
 }
 
@@ -51,18 +56,19 @@ function solve2(data)
 {
   const operands = data.pop().split(/\s+/);
 
+  // Find indices of empty columns
   const empty = data
     .reduce((a, line) => a === null ? allIndexesOf(' ', line) :
       intersect(a, allIndexesOf(' ', line)), null);
-  empty.unshift(0);
+  empty.unshift(-1);
+  empty.push(data[0].length);
 
   const numbers = data.map(line =>
   {
     const result = [];
-    for (let i = 0; i < empty.length; i++)
+    for (let i = 0; i < empty.length - 1; i++)
     {
-      result.push(line.substring(empty[i] ? 1 + empty[i] : 0,
-        empty[i + 1] ?? line.length));
+      result.push(line.substring(empty[i] + 1, empty[i + 1]));
     }
     return result;
   });
@@ -86,16 +92,12 @@ export default async function day06(target)
 
   const buffer = await fs.readFile(target);
 
-  const orgdata = buffer
+  const data = buffer
     .toString()
     .split('\n')
     .filter(v => v);
 
-  const data = orgdata
-    .map(v => v.trim().split(/\s+/).map(n => /^\d+$/.test(n) ? Number(n) : n));
-
-  const input = [ data.pop(), data ];
-  const part1 = solve1(...input);
+  const part1 = solve1(data);
   const expect1a = 4277556;
   if (target.includes('example') && part1 !== expect1a)
   {
@@ -107,7 +109,7 @@ export default async function day06(target)
     throw new Error(`Invalid part 1 solution: ${part1}. Expecting; ${expect1b}`);
   }
 
-  const part2 = solve2(orgdata);
+  const part2 = solve2(data);
   const expect2a = 3263827;
   if (target.includes('example') && part2 !== expect2a)
   {
