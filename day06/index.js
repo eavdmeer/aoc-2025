@@ -36,11 +36,35 @@ function intersect(a, b)
   return b.filter(value => setA.has(value));
 }
 
-function transpose(mat)
+/*
+ * Nested loop transposition for any matrix size.
+ * Time Complexity: O(Rows * Cols)
+ * Space Complexity: O(Rows * Cols) - creates a new array
+ */
+function transposeOptimized(matrix)
 {
-  return mat.reduce((prev, next) =>
-    next.map((item, i) => (prev[i] || []).concat(next[i])), []);
+  // Pre-allocate the result array to the correct size
+  const transposed = new Array(matrix[0].length);
+
+  for (let j = 0; j < matrix[0].length; j++)
+  {
+    transposed[j] = new Array(matrix.length);
+    for (let i = 0; i < matrix.length; i++)
+    {
+      transposed[j][i] = matrix[i][j];
+    }
+  }
+
+  return transposed;
 }
+
+/* slower, but beautifully efficient
+function transpose(arr)
+{
+  return arr.reduce((a, v) => v.map((w, i) => (a[i] || []).concat(w)),
+    []);
+}
+*/
 
 const allIndexesOf = (ch, str) =>
 {
@@ -52,14 +76,14 @@ const allIndexesOf = (ch, str) =>
   return result;
 };
 
-function solve2(data, method = 1)
+function solve2(data, method = 2)
 {
   const ops = data.pop().split(/\s+/);
 
   if (method === 2)
   {
     // eslint-disable-next-line no-eval
-    return eval(transpose(data.map(v => v.split('')))
+    return eval(transposeOptimized(data.map(v => v.split('')))
       .map(v => v.join(''))
       .join('\n')
       .split(/\n\s+\n/)
@@ -84,7 +108,7 @@ function solve2(data, method = 1)
     return result;
   });
 
-  return transpose(numbers).reduce((a, col, i) =>
+  return transposeOptimized(numbers).reduce((a, col, i) =>
   {
     const op = ops[i];
     let result = op === '*' ? 1 : 0;
