@@ -33,16 +33,13 @@ const cache = new Map();
 
 function solve2(data, row = 0, col = data[0].indexOf('S'))
 {
-  debug({ row, col, ch: data[row]?.charAt(col) });
-
   const key = row * data[0].length + col;
   if (cache.has(key)) { return cache.get(key); }
 
   if (row >= data.length) { return 1; }
 
   const result = data[row].charAt(col) === '^' ?
-    solve2(data, row + 1, col - 1) +
-      solve2(data, row + 1, col + 1) :
+    solve2(data, row + 1, col - 1) + solve2(data, row + 1, col + 1) :
     solve2(data, row + 1, col);
 
   cache.set(key, result);
