@@ -43,7 +43,7 @@ function solve1(distances, data, count = 10)
         continue;
       }
       // Connect two circuits into p1.
-      circuits[havep1] = [ ...circuits[havep1], ...circuits[havep2] ];
+      circuits[havep1].push(...circuits[havep2]);
       // Remove p2.
       circuits.splice(havep2, 1);
     }
@@ -96,7 +96,7 @@ function solve2(distances, data)
         continue;
       }
       // Connect two circuits into p1.
-      circuits[havep1] = [ ...circuits[havep1], ...circuits[havep2] ];
+      circuits[havep1].push(...circuits[havep2]);
       // Remove p2.
       circuits.splice(havep2, 1);
     }
