@@ -11,8 +11,6 @@ if (process.argv[2])
     .then(console.log);
 }
 
-// const key = (x, y, z) => x << 17 & y << 34 && z << 51;
-
 const dist = (p, q) =>
   (p[0] - q[0]) ** 2 +
   (p[1] - q[1]) ** 2 +
@@ -24,13 +22,14 @@ function solve1(distances, data, count = 10)
   const circuits = [];
   let current = 0;
 
+  const key = (p1, p2) => p1 << 16 | p2;
+
   while (connected.size < count)
   {
-    const [ pair ] = distances[current++];
-    if (connected.has(pair)) { continue; }
-    connected.add(pair);
-
-    const [ p1, p2 ] = pair.split('-').map(Number);
+    const [ p1, p2 ] = distances[current++];
+    const k = key(p1, p2);
+    if (connected.has(k)) { continue; }
+    connected.add(k);
 
     const havep1 = circuits.findIndex(v => v.includes(p1));
     const havep2 = circuits.findIndex(v => v.includes(p2));
@@ -40,7 +39,7 @@ function solve1(distances, data, count = 10)
       if (havep1 === havep2)
       {
         // Already in a circuit
-        connected.add(pair);
+        connected.add(k);
         continue;
       }
       // Connect two circuits into p1.
@@ -76,13 +75,14 @@ function solve2(distances, data)
   let last;
   let current = 0;
 
+  const key = (p1, p2) => p1 << 16 | p2;
+
   while (circuits[0]?.length !== data.length)
   {
-    const [ pair ] = distances[current++];
-    if (connected.has(pair)) { continue; }
-    connected.add(pair);
-
-    const [ p1, p2 ] = pair.split('-').map(Number);
+    const [ p1, p2 ] = distances[current++];
+    const k = key(p1, p2);
+    if (connected.has(k)) { continue; }
+    connected.add(k);
 
     const havep1 = circuits.findIndex(v => v.includes(p1));
     const havep2 = circuits.findIndex(v => v.includes(p2));
@@ -92,7 +92,7 @@ function solve2(distances, data)
       if (havep1 === havep2)
       {
         // Already in a circuit
-        connected.add(pair);
+        connected.add(k);
         continue;
       }
       // Connect two circuits into p1.
@@ -141,10 +141,10 @@ export default async function day08(target)
     {
       const p2 = data[k];
 
-      distances.push([ `${i}-${k}`, dist(p1, p2) ]);
+      distances.push([ i, k, dist(p1, p2) ]);
     }
   }
-  distances.sort((a, b) => a[1] - b[1]);
+  distances.sort((a, b) => a[2] - b[2]);
 
   const count = target.includes('example') ? 10 : 1000;
   const part1 = solve1(distances, data, count);
