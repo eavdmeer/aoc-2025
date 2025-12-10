@@ -24,6 +24,7 @@
     "eslint-plugin-jest": "^29.1.0"
   },
   "dependencies": {
-    "@datastructures-js/priority-queue": "^6.3.5"
+    "@datastructures-js/priority-queue": "^6.3.5",
+    "linear-solve": "^1.2.1"
   }
 }
